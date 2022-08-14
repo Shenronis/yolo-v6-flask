@@ -1,1 +1,4 @@
-# yolo-v6-flask
+# Final Semester Project: A demo website for YOLOv6
+
+- Using pre-trained [YOLOv6](https://github.com/meituan/YOLOv6) model.
+- Python Flask for web interface
