@@ -2,3 +2,6 @@
 
 - Using pre-trained [YOLOv6](https://github.com/meituan/YOLOv6) model.
 - Python Flask for web interface
+
+## Requirement
+See in `dependencies.txt`
