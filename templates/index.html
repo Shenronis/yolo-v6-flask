@@ -134,7 +134,7 @@
                         {% endif %}
     
                         {% if result_image %}
-                            <img style="max-width:560px; border-radius:1rem" src="{{ url_for('static', filename=result_image) }}?{{ rand }}" alt="Result Image">
+                            <img style="max-width:560px; max-height: 560px; border-radius:1rem" src="{{ url_for('static', filename=result_image) }}?{{ rand }}" alt="Result Image">
                         {% endif %}
                     {% else %}                    
                         <div><i class="fa-solid fa-images fa-5x"></i></div>
