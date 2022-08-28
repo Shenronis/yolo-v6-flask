@@ -21,7 +21,7 @@ from yolov6.layers.common import DetectBackend
 from yolov6.data.data_augment import letterbox
 from yolov6.utils.nms import non_max_suppression
 
-class my_yolov6():
+class yolov6():    
     def __init__(self, weights, device, yaml, img_size, half):
         self.__dict__.update(locals())
 
@@ -45,7 +45,7 @@ class my_yolov6():
 
         if self.device.type != 'cpu':
             self.model(torch.zeros(1, 3, *self.img_size).to(self.device).type_as(
-                next(self.model.model.parameters())))  # warmup
+                next(self.model.model.parameters())))
 
         # Switch model to deploy status
         self.model_switch(self.model.model, self.img_size)
@@ -123,21 +123,20 @@ class my_yolov6():
 
         if len(img.shape) == 3:
             img = img[None]
-            # expand for batch dim
 
-        pred_results = self.model(img)
-        det = non_max_suppression(pred_results, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)[0]
+        predict_results = self.model(img)
+        detected = non_max_suppression(predict_results, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)[0]
 
-        if len(det):
-            det[:, :4] = self.rescale(img.shape[2:], det[:, :4], img_src.shape).round()
-            for *xyxy, conf, cls in reversed(det):
+        if len(detected):
+            detected[:, :4] = self.rescale(img.shape[2:], detected[:, :4], img_src.shape).round()
+            for *xyxy, conf, cls in reversed(detected):
                 class_num = int(cls)  # integer class
                 label = f'{self.class_names[class_num]} {conf:.2f}'
                 self.plot_box_and_label(img_src, max(round(sum(img_src.shape) / 2 * 0.003), 2), xyxy, label, color=(255,0,0))
 
             img_src = np.asarray(img_src)
 
-        return img_src, len(det)
+        return img_src, len(detected)
 
 
 

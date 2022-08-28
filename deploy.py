@@ -4,10 +4,10 @@ import cv2
 
 from flask import Flask, render_template, request
 from random import random
-from m_yolov6 import my_yolov6
+from m_yolov6 import yolov6
 
 # Load model once
-yolov6_model = my_yolov6("weights/yolov6s.pt","cpu","data/coco.yaml", 640, True)
+yolo_v6_model = yolov6("weights/yolov6n.pt","cpu","data/coco.yaml", 640, True)
 
 # Flask
 app = Flask(__name__)
@@ -15,29 +15,29 @@ app.config['UPLOAD_FOLDER'] = "static"
 
 @app.route("/", methods=['GET', 'POST'])
 def home_page():
-    # Upload picture
-    if request.method == "POST":
+    if (request.method == "POST"):
+        # Upload picture
         try:
             image = request.files['file']            
-            if image:
+            if (image):
                 # Save uploaded img to ['UPLOAD_FOLDER']
-                path_to_save = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
-                image.save(path_to_save)
+                upload_path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+                image.save(upload_path)
 
                 # Loads img with OpenCV
-                frame = cv2.imread(path_to_save)
+                frame = cv2.imread(upload_path)
 
                 # Inference
-                frame, ndet = yolov6_model.infer(frame, conf_thres=0.6, iou_thres=0.45)
+                frame, num_detected = yolo_v6_model.infer(frame, conf_thres=0.6, iou_thres=0.45)
 
-                if ndet!=0:
+                if (num_detected != 0):
                     # Overwrite the img with the one with bounding boxes placed
-                    cv2.imwrite(path_to_save, frame)
+                    cv2.imwrite(upload_path, frame)
 
                     # Return result img to render
-                    return render_template("index.html", result_image = image.filename, msg="Tải file lên thành công", ndet = ndet)
+                    return render_template("index.html", result_image = image.filename, msg="Tải file lên thành công", num_detected = num_detected)
                 else:
-                    return render_template('index.html', result_image = image.filename, msg='Không nhận diện được vật thể', ndet = ndet)
+                    return render_template('index.html', result_image = image.filename, msg='Không nhận diện được vật thể', num_detected = num_detected)
             else:
                 return render_template('index.html', msg='Hãy chọn file ảnh tải lên')
 
@@ -45,8 +45,8 @@ def home_page():
             print(ex)
             return render_template('index.html', msg='Không nhận diện được vật thể')
 
-    # Load page
     else:
+        # Load page
         return render_template('index.html')
 
 if __name__ == '__main__':
