@@ -5,3 +5,4 @@
 
 ## Requirement
 See in `dependencies.txt`
+Install with `pip install -r dependencies.txt`
