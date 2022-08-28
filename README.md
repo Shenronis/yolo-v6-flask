@@ -4,6 +4,6 @@
 - Python Flask for web interface
 
 ## Requirement
-See in `dependencies.txt`
+See in `dependencies.txt`. Install with `pip install -r dependencies.txt`
 
-Install with `pip install -r dependencies.txt`
+Create folder named "static" in the project
